@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 export PATH=$PATH:/usr/local/bin
 
-#彩色
 red(){
     echo -e "\033[31m\033[01m$1\033[0m"
 }
@@ -46,6 +45,8 @@ bit=`uname -m`
 version=`uname -r | awk -F "-" '{print $1}'`
 main=`uname  -r | awk -F . '{print $1 }'`
 minor=`uname -r | awk -F . '{print $2}'`
+rv4=`ip -4 a | grep inet | grep -v 127.0.0 | awk '{print $2}' | cut -d'/' -f1`
+rv6=`ip a | grep inet6 | awk 'NR==2 {print $2}' | cut -d'/' -f1`
 
 
 yellow " 安装相关依赖："
@@ -107,8 +108,8 @@ green " 系统内核版本 - $version "
 green " CPU架构名称  - $bit "
 green " 虚拟架构类型 - $virt "
 green " -----------------------------------------------"
-blue " 本warp脚本仅支持网络效能最高的内核集成模式 "
-blue " 要求系统内核必须在5.6以上（已带更新内核功能） "
+blue " 本warp多功能脚本仅支持网络效能最高的-内-核-集-成-模式 "
+blue " 要求系统内核必须在5.6以上（脚本包含更新内核功能） "
 
 red " 对此无压力的请按：任意键继续。对此没兴趣的请按：Ctrl+C退出。 "
 char=$(get_char)
@@ -198,8 +199,8 @@ wget -N https://github.com/ViRb3/wgcf/releases/download/v2.2.3/wgcf_2.2.3_linux_
 chmod +x /usr/local/bin/wgcf
 echo | wgcf register
 wgcf generate
-sed -i "5 s/^/PostUp = ip -4 rule add from $(ip addr | egrep 'ens|eth0' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
-sed -i "6 s/^/PostDown = ip -4 rule delete from $(ip addr | egrep 'ens|eth0' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
+sed -i "5 s/^/PostUp = ip -4 rule add from $rv4 table main\n/" wgcf-profile.conf
+sed -i "6 s/^/PostDown = ip -4 rule delete from $rv4 table main\n/" wgcf-profile.conf
 sed -i 's/engage.cloudflareclient.com/162.159.192.1/g' wgcf-profile.conf
 sed -i 's/1.1.1.1/9.9.9.9,8.8.8.8/g' wgcf-profile.conf
 cp wgcf-account.toml /etc/wireguard/wgcf-account.toml
@@ -246,8 +247,8 @@ wget -N https://github.com/ViRb3/wgcf/releases/download/v2.2.3/wgcf_2.2.3_linux_
 chmod +x /usr/local/bin/wgcf
 echo | wgcf register
 wgcf generate
-sed -i "5 s/^/PostUp = ip -4 rule add from $(ip addr | egrep 'ens|eth0' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
-sed -i "6 s/^/PostDown = ip -4 rule delete from $(ip addr | egrep 'ens|eth0' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
+sed -i "5 s/^/PostUp = ip -4 rule add from $rv4 table main\n/" wgcf-profile.conf
+sed -i "6 s/^/PostDown = ip -4 rule delete from $rv4 table main\n/" wgcf-profile.conf
 sed -i 's/engage.cloudflareclient.com/162.159.192.1/g' wgcf-profile.conf
 sed -i '/\:\:\/0/d' wgcf-profile.conf
 sed -i 's/1.1.1.1/9.9.9.9,8.8.8.8/g' wgcf-profile.conf
@@ -295,8 +296,8 @@ wget -N https://github.com/ViRb3/wgcf/releases/download/v2.2.3/wgcf_2.2.3_linux_
 chmod +x /usr/local/bin/wgcf
 echo | wgcf register
 wgcf generate
-sed -i "5 s/^/PostUp = ip -6 rule add from $(ip addr | egrep 'inet6' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
-sed -i "6 s/^/PostDown = ip -6 rule delete from $(ip addr | egrep 'inet6' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
+sed -i "5 s/^/PostUp = ip -6 rule add from $rv6 table main\n/" wgcf-profile.conf
+sed -i "6 s/^/PostDown = ip -6 rule delete from $rv6 table main\n/" wgcf-profile.conf
 sed -i '/0\.0\.0\.0\/0/d' wgcf-profile.conf
 sed -i 's/1.1.1.1/9.9.9.9,8.8.8.8/g' wgcf-profile.conf
 cp wgcf-account.toml /etc/wireguard/wgcf-account.toml
@@ -343,10 +344,10 @@ wget -N https://github.com/ViRb3/wgcf/releases/download/v2.2.3/wgcf_2.2.3_linux_
 chmod +x /usr/local/bin/wgcf
 echo | wgcf register
 wgcf generate
-sed -i "5 s/^/PostUp = ip -4 rule add from $(ip addr | egrep 'ens|eth0' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
-sed -i "6 s/^/PostDown = ip -4 rule delete from $(ip addr | egrep 'ens|eth0' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
-sed -i "7 s/^/PostUp = ip -6 rule add from $(ip addr | egrep 'inet6' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
-sed -i "8 s/^/PostDown = ip -6 rule delete from $(ip addr | egrep 'inet6' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
+sed -i "5 s/^/PostUp = ip -4 rule add from $rv4 table main\n/" wgcf-profile.conf
+sed -i "6 s/^/PostDown = ip -4 rule delete from $rv4 table main\n/" wgcf-profile.conf
+sed -i "7 s/^/PostUp = ip -6 rule add from $rv6 table main\n/" wgcf-profile.conf
+sed -i "8 s/^/PostDown = ip -6 rule delete from $rv6 table main\n/" wgcf-profile.conf
 sed -i 's/1.1.1.1/9.9.9.9,8.8.8.8/g' wgcf-profile.conf
 cp wgcf-account.toml /etc/wireguard/wgcf-account.toml
 cp wgcf-profile.conf /etc/wireguard/wgcf.conf
@@ -392,8 +393,8 @@ wget -N https://github.com/ViRb3/wgcf/releases/download/v2.2.3/wgcf_2.2.3_linux_
 chmod +x /usr/local/bin/wgcf
 echo | wgcf register
 wgcf generate
-sed -i "5 s/^/PostUp = ip -4 rule add from $(ip addr | egrep 'ens|eth0' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
-sed -i "6 s/^/PostDown = ip -4 rule delete from $(ip addr | egrep 'ens|eth0' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
+sed -i "5 s/^/PostUp = ip -4 rule add from $rv4 table main\n/" wgcf-profile.conf
+sed -i "6 s/^/PostDown = ip -4 rule delete from $rv4 table main\n/" wgcf-profile.conf
 sed -i '/\:\:\/0/d' wgcf-profile.conf
 sed -i 's/1.1.1.1/9.9.9.9,8.8.8.8/g' wgcf-profile.conf
 cp wgcf-account.toml /etc/wireguard/wgcf-account.toml
@@ -405,8 +406,8 @@ yellow " 检测是否成功启动Warp！\n 显示IPV4地址：$(wget -qO- ipv4.i
 green " 如上方显示IPV4地址：8.…………，则说明成功啦！\n 如上方显示VPS本地IP,（说明申请WGCF账户失败），请继续运行该脚本吧，直到成功为止！！！ "
 }
 
-function linux5.11(){
-wget -N --no-check-certificate https://raw.githubusercontent.com/YG-tsj/Oracle-warp/main/ccore.sh&& chmod +x ccore.sh && ./ccore.sh
+function upcore(){
+wget -N --no-check-certificate https://raw.githubusercontent.com/YG-tsj/Pro-warp/main/upcore.sh&& chmod +x upcore.sh && ./upcore.sh
 }
 
 function iptables(){
@@ -440,12 +441,21 @@ function phlinhng(){
 curl -fsSL https://raw.staticdn.net/phlinhng/v2ray-tcp-tls-web/main/src/xwall.sh -o ~/xwall.sh && bash ~/xwall.sh
 }
 
-function ipv4(){
-curl -4 ip.p3terx.com
-}
-
-function ipv6(){
-curl -6 ip.p3terx.com
+function cv46(){
+        yellow "开始检测IPV4地址"
+	v4=`wget -qO- ipv4.ip.sb`
+	if [[ -z $v4 ]]; then
+		red " VPS当前检测不到IPV4地址 "
+	else
+		green " VPS当前正使用的IPV4地址: $v4 "
+	fi
+	yellow "开始检测IPV6地址"
+	v6=`wget -qO- ipv6.ip.sb`
+	if [[ -z $v6 ]]; then
+		red " VPS当前检测不到IPV6地址 "
+	else
+		green " VPS当前正使用的IPV6地址: $v6 "
+	fi
 }
 
 function Netflix(){
@@ -470,7 +480,7 @@ systemctl status wg-quick@wgcf
 }
 
 function up(){
-wget -N --no-check-certificate https://raw.githubusercontent.com/YG-tsj/ceshi/main/123.sh && chmod +x 123.sh && ./123.sh
+wget -N --no-check-certificate https://raw.githubusercontent.com/YG-tsj/Pro-warp/main/multi.sh && chmod +x multi.sh && ./multi.sh
 }
 
 #主菜单
@@ -478,17 +488,17 @@ function start_menu(){
     clear
     red " 详细说明 https://github.com/YG-tsj/Oracle-warp  YouTube频道：甬哥探世界 " 
     
-    red " 围绕WARP功能的脚本，目前仅支持KVM X86架构/Ubuntu 20.04系统，还在优化添加新功能中…… "  
+    red " 围绕WARP功能的脚本，支持KVM X86架构的Ubuntu/Centos/Debain最新系统 "  
     
     red " ==============================================================================================" 
     
-    yellow " 切记：进入脚本快捷方式 bash ~/multiV464.sh "
+    yellow " 切记：进入脚本快捷方式 bash ~/multi.sh "
     
     blue " ==========================一、VPS状态调整选择（更新中）==========================================" 
     
     blue " 1. 开启甲骨文VPS的ubuntu系统所有端口。自动断连后，请重新连接SSH（甲骨文云用户建议选择！！） "
     
-    blue " 2. 更新linux系统X86架构通用版内核至5.11版。自动断连后，请重新连接SSH "
+    blue " 2. 更新系统内核 "
     
     blue " 3. 开启原生BBR加速 "
     
@@ -496,45 +506,41 @@ function start_menu(){
     
     green " =========================二、WARP功能选择（更新中）=============================================="
     
-    green " ----VPS原生IP数--------------添加WARP虚拟IP的位置-----------是否需要输入相关IP--------------"
+    green " ----VPS原生IP数------------------------------------添加WARP虚拟IP的位置--------------"
     
-    green " 5. 单IPV4的VPS。             添加WARP虚拟IPV6               (无须输入IP地址！其他vps无脑推荐）" 
+    green " 5. 单IPV4的VPS。                                   添加WARP虚拟IPV6               "
     
-    green " 6. 单IPV4的VPS。             添加WARP虚拟IPV4+虚拟IPV6      (须输入VPS专用IP地址）"
+    green " 6. 单IPV4的VPS。                                   添加WARP虚拟IPV4+虚拟IPV6      "
     
-    green " 7. 单IPV4的VPS。             添加WARP虚拟IPV4               (须输入VPS专用IP地址）"
+    green " 7. 单IPV4的VPS。                                   添加WARP虚拟IPV4              "
     
-    green " 8. 双栈IPV4+IPV6的VPS。      添加WARP虚拟IPV6               (须输入VPS本地IPV6地址)" 
+    green " 8. 双栈IPV4+IPV6的VPS。                            添加WARP虚拟IPV6               "
     
-    green " 9. 双栈IPV4+IPV6的VPS。      添加WARP虚拟IPV4+虚拟IPV6      (须输入VPS专用IP地址+VPS本地IPV6地址)"
+    green " 9. 双栈IPV4+IPV6的VPS。                            添加WARP虚拟IPV4+虚拟IPV6      "
     
-    green " 10. 双栈IPV4+IPV6的VPS。     添加WARP虚拟IPV4               (须输入VPS专用IP地址)"
+    green " 10. 双栈IPV4+IPV6的VPS。                           添加WARP虚拟IPV4               "
     
     green " ------------------------------------------------------------------------------------------------"
     
-    green " 11. 统一DNS设置。自动断连后，请重新连接SSH（建议选择） "
+    green " 11. 永久关闭WARP功能 "
     
-    green " 12. 永久关闭WARP功能 "
+    green " 12. 自动开启WARP功能 "
     
-    green " 13. 自动开启WARP功能 "
+    green " 13. 查看当前WARP运行状态 "
     
-    green " 14. 查看当前WARP运行状态 "
+    green " 14. 查看VPS当前正在使用的IPV4/IPV6地址 "
     
-    green " 15. 查看VPS当前正在使用的IPV4地址 "
-    
-    green " 16. 查看VPS当前正在使用的IPV6地址 "
-    
-    green " 17. 更新脚本 "
+    green " 15. 更新脚本 "
     
     yellow " ========================三、代理协议脚本选择（更新中）==========================================="
     
-    yellow " 18.使用mack-a脚本（支持Xray, V2ray, Trojan-go） "
+    yellow " 16.使用mack-a脚本（支持Xray, V2ray, Trojan-go） "
     
-    yellow " 19.使用phlinhng脚本（支持Xray, Trojan-go, SS+v2ray-plugin） "
+    yellow " 17.使用phlinhng脚本（支持Xray, Trojan-go, SS+v2ray-plugin） "
     
     yellow " ==============================================================================================="
     
-    red " 20. 重启VPS实例，请重新连接SSH "
+    red " 18. 重启VPS实例，请重新连接SSH "
     
     red " ==================================================================================================" 
     
@@ -546,7 +552,7 @@ function start_menu(){
            iptables
 	;;
 	2 )
-           linux5.11
+           upcore
 	;;
         3 )
            BBR
@@ -573,33 +579,27 @@ function start_menu(){
            warp464
 	;;
 	11 )
-           dns
-	;;
-	12 )
            cwarp
 	;;
-	13 )
+	12 )
            owarp
 	;;
-	14 )
+	13 )
            status
 	;;
+	14 )
+           cv46
+	;;
 	15 )
-           ipv4
-	;;
-	16 )
-           ipv6
-	;;
-	17 )
            up
 	;;
-	18 )
+	16 )
            macka
 	;;
-	19 )
+	17 )
            phlinhng
 	;;
-	20 )
+	18 )
            reboot
 	;;
         0 )
@@ -651,8 +651,8 @@ cp wgcf /usr/local/bin/wgcf
 chmod +x /usr/local/bin/wgcf
 echo | wgcf register
 wgcf generate
-sed -i "5 s/^/PostUp = ip -4 rule add from $(ip addr | egrep 'enp0s3' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
-sed -i "6 s/^/PostDown = ip -4 rule delete from $(ip addr | egrep 'enp0s3' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
+sed -i "5 s/^/PostUp = ip -4 rule add from $rv4 table main\n/" wgcf-profile.conf
+sed -i "6 s/^/PostDown = ip -4 rule delete from $rv4 table main\n/" wgcf-profile.conf
 sed -i 's/engage.cloudflareclient.com/162.159.192.1/g' wgcf-profile.conf
 sed -i 's/1.1.1.1/9.9.9.9,8.8.8.8/g' wgcf-profile.conf
 cp wgcf-account.toml /etc/wireguard/wgcf-account.toml
@@ -677,8 +677,8 @@ cp wgcf /usr/local/bin/wgcf
 chmod +x /usr/local/bin/wgcf
 echo | wgcf register
 wgcf generate
-sed -i "5 s/^/PostUp = ip -4 rule add from $(ip addr | egrep 'enp0s3' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
-sed -i "6 s/^/PostDown = ip -4 rule delete from $(ip addr | egrep 'enp0s3' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
+sed -i "5 s/^/PostUp = ip -4 rule add from $rv4 table main\n/" wgcf-profile.conf
+sed -i "6 s/^/PostDown = ip -4 rule delete from $rv4 table main\n/" wgcf-profile.conf
 sed -i 's/engage.cloudflareclient.com/162.159.192.1/g' wgcf-profile.conf
 sed -i '/\:\:\/0/d' wgcf-profile.conf
 sed -i 's/1.1.1.1/9.9.9.9,8.8.8.8/g' wgcf-profile.conf
@@ -704,8 +704,8 @@ cp wgcf /usr/local/bin/wgcf
 chmod +x /usr/local/bin/wgcf
 echo | wgcf register
 wgcf generate
-sed -i "5 s/^/PostUp = ip -6 rule add from $(ip addr | egrep 'inet6' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
-sed -i "6 s/^/PostDown = ip -6 rule delete from $(ip addr | egrep 'inet6' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
+sed -i "5 s/^/PostUp = ip -6 rule add from $rv6 table main\n/" wgcf-profile.conf
+sed -i "6 s/^/PostDown = ip -6 rule delete from $rv6 table main\n/" wgcf-profile.conf
 sed -i '/0\.0\.0\.0\/0/d' wgcf-profile.conf
 sed -i 's/1.1.1.1/9.9.9.9,8.8.8.8/g' wgcf-profile.conf
 cp wgcf-account.toml /etc/wireguard/wgcf-account.toml
@@ -730,10 +730,10 @@ cp wgcf /usr/local/bin/wgcf
 chmod +x /usr/local/bin/wgcf
 echo | wgcf register
 wgcf generate
-sed -i "5 s/^/PostUp = ip -4 rule add from $(ip addr | egrep 'enp0s3' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
-sed -i "6 s/^/PostDown = ip -4 rule delete from $(ip addr | egrep 'enp0s3' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
-sed -i "7 s/^/PostUp = ip -6 rule add from $(ip addr | egrep 'inet6' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
-sed -i "8 s/^/PostDown = ip -6 rule delete from $(ip addr | egrep 'inet6' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
+sed -i "5 s/^/PostUp = ip -4 rule add from $rv4 table main\n/" wgcf-profile.conf
+sed -i "6 s/^/PostDown = ip -4 rule delete from $rv4 table main\n/" wgcf-profile.conf
+sed -i "7 s/^/PostUp = ip -6 rule add from $rv6 table main\n/" wgcf-profile.conf
+sed -i "8 s/^/PostDown = ip -6 rule delete from $rv6 table main\n/" wgcf-profile.conf
 sed -i 's/1.1.1.1/9.9.9.9,8.8.8.8/g' wgcf-profile.conf
 cp wgcf-account.toml /etc/wireguard/wgcf-account.toml
 cp wgcf-profile.conf /etc/wireguard/wgcf.conf
@@ -757,8 +757,8 @@ cp wgcf /usr/local/bin/wgcf
 chmod +x /usr/local/bin/wgcf
 echo | wgcf register
 wgcf generate
-sed -i "5 s/^/PostUp = ip -4 rule add from $(ip addr | egrep 'enp0s3' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
-sed -i "6 s/^/PostDown = ip -4 rule delete from $(ip addr | egrep 'enp0s3' | awk -F '/' '{print $1}' | awk 'NR==2 {print $2}') table main\n/" wgcf-profile.conf
+sed -i "5 s/^/PostUp = ip -4 rule add from $rv4 table main\n/" wgcf-profile.conf
+sed -i "6 s/^/PostDown = ip -4 rule delete from $rv4 table main\n/" wgcf-profile.conf
 sed -i '/\:\:\/0/d' wgcf-profile.conf
 sed -i 's/1.1.1.1/9.9.9.9,8.8.8.8/g' wgcf-profile.conf
 cp wgcf-account.toml /etc/wireguard/wgcf-account.toml
@@ -802,12 +802,21 @@ function phlinhng(){
 curl -fsSL https://raw.staticdn.net/phlinhng/v2ray-tcp-tls-web/main/src/xwall.sh -o ~/xwall.sh && bash ~/xwall.sh
 }
 
-function ipv4(){
-curl -4 ip.p3terx.com
-}
-
-function ipv6(){
-curl -6 ip.p3terx.com
+function cv46(){
+        yellow "开始检测IPV4地址"
+	v4=`wget -qO- ipv4.ip.sb`
+	if [[ -z $v4 ]]; then
+		red " VPS当前检测不到IPV4地址 "
+	else
+		green " VPS当前正使用的IPV4地址: $v4 "
+	fi
+	yellow "开始检测IPV6地址"
+	v6=`wget -qO- ipv6.ip.sb`
+	if [[ -z $v6 ]]; then
+		red " VPS当前检测不到IPV6地址 "
+	else
+		green " VPS当前正使用的IPV6地址: $v6 "
+	fi
 }
 
 function Netflix(){
@@ -842,7 +851,7 @@ systemctl status wg-quick@wgcf
 }
 
 function up(){
-wget -N --no-check-certificate https://raw.githubusercontent.com/YG-tsj/ceshi/main/123.sh && chmod +x 123.sh && ./123.sh
+wget -N --no-check-certificate https://raw.githubusercontent.com/YG-tsj/Pro-warp/main/multi.sh && chmod +x multi.sh && ./multi.sh
 }
 
 #主菜单
@@ -850,17 +859,17 @@ function start_menu(){
     clear
     red " 详细说明 https://github.com/YG-tsj/Oracle-warp  YouTube频道：甬哥探世界 " 
     
-    red " 围绕WARP功能的脚本，目前仅支持KVM ARM架构/Ubuntu 20.04系统，还在优化添加新功能中…… "  
+    red " 围绕WARP功能的脚本，目前仅支持甲骨文KVM ARM架构/Ubuntu 20.04系统，还在优化添加新功能中…… "  
     
     red " ==============================================================================================" 
     
-    yellow " 切记：进入脚本快捷方式bash ~/multiV464.sh "
+    yellow " 切记：进入脚本快捷方式bash ~/multi.sh "
     
     blue " ==========================一、VPS状态调整选择（更新中）==========================================" 
     
     blue " 1. 开启甲骨文VPS的ubuntu系统所有端口。自动断连后，请重新连接SSH（甲骨文云用户建议选择！！） "
     
-    blue " 2. 更新linux系统ARM架构通用版内核至5.11版。自动断连后，请重新连接SSH "
+    blue " 2. 更新ARM架构通用版内核至5.11版。自动断连后，请重新连接SSH "
     
     blue " 3. 开启原生BBR加速 "
     
@@ -868,43 +877,39 @@ function start_menu(){
     
     green " =========================二、WARP功能选择（更新中）=============================================="
     
-    green " ----VPS原生IP数--------------添加WARP虚拟IP的位置-----------是否需要输入相关IP--------------"
+    green " ----VPS原生IP数-------------------------------------添加WARP虚拟IP的位置----------"
     
-    green " 5. 纯IPV4的VPS。             添加WARP虚拟IPV6               (无须输入IP地址！其他vps无脑推荐）" 
+    green " 5. 纯IPV4的VPS。                                    添加WARP虚拟IPV6          "     
     
-    green " 6. 纯IPV4的VPS。             添加WARP虚拟IPV4+虚拟IPV6      (须输入VPS专用IP地址）"
+    green " 6. 纯IPV4的VPS。                                    添加WARP虚拟IPV4+虚拟IPV6  "   
     
-    green " 7. 纯IPV4的VPS。             添加WARP虚拟IPV4               (须输入VPS专用IP地址）"
+    green " 7. 纯IPV4的VPS。                                    添加WARP虚拟IPV4            "  
     
-    green " 8. 双栈IPV4+IPV6的VPS。      添加WARP虚拟IPV6               (须输入VPS本地IPV6地址)" 
+    green " 8. 双栈IPV4+IPV6的VPS。                             添加WARP虚拟IPV6             " 
     
-    green " 9. 双栈IPV4+IPV6的VPS。      添加WARP虚拟IPV4+虚拟IPV6      (须输入VPS专用IP地址+VPS本地IPV6地址)"
+    green " 9. 双栈IPV4+IPV6的VPS。                             添加WARP虚拟IPV4+虚拟IPV6     " 
     
-    green " 10. 双栈IPV4+IPV6的VPS。     添加WARP虚拟IPV4               (须输入VPS专用IP地址)"
+    green " 10. 双栈IPV4+IPV6的VPS。                            添加WARP虚拟IPV4               "
     
     green " ------------------------------------------------------------------------------------------------"
     
-    green " 11. 统一DNS设置。自动断连后，请重新连接SSH（建议选择） "
+    green " 11. 永久关闭WARP功能 "
     
-    green " 12. 永久关闭WARP功能 "
+    green " 12. 自动开启WARP功能 "
     
-    green " 13. 自动开启WARP功能 "
+    green " 13. 查看当前WARP运行状态 "
     
-    green " 14. 查看当前WARP运行状态 "
+    green " 14. 查看VPS当前正在使用的IPV4/IPV6地址 "
     
-    green " 15. 查看VPS当前正在使用的IPV4地址 "
-    
-    green " 16. 查看VPS当前正在使用的IPV6地址 "
-    
-    green " 17. 更新脚本 "
+    green " 15. 更新脚本 "
     
     yellow " ========================三、代理协议脚本选择（更新中）==========================================="
     
-    yellow " 18.使用mack-a脚本（支持ARM架构VPS，支持协议：Xray, V2ray, Trojan-go） "
+    yellow " 16.使用mack-a脚本（支持ARM架构VPS，支持协议：Xray, V2ray, Trojan-go） "
     
     yellow " ==============================================================================================="
     
-    red " 19. 重启VPS实例，请重新连接SSH "
+    red " 17. 重启VPS实例，请重新连接SSH "
     
     red " ==================================================================================================" 
     
@@ -943,30 +948,24 @@ function start_menu(){
            warp464
 	;;
 	11 )
-           dns
-	;;
-	12 )
            cwarp
 	;;
-	13 )
+	12 )
            owarp
 	;;
-	14 )
+	13 )
            status
 	;;
+	14 )
+           cv46
+	;;
 	15 )
-           ipv4
-	;;
-	16 )
-           ipv6
-	;;
-	17 )
            up
 	;;
-	18 )
+	16 )
            macka
 	;;
-	19 )
+	17 )
            reboot
 	;;
         0 )
