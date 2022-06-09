@@ -34,10 +34,10 @@ reboot
 
 function ub(){
 cd /tmp
-wget --no-check-certificate -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.6.10/linux-headers-5.6.10-050610_5.6.10-050610.202005052301_all.deb
-wget --no-check-certificate -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.6.10/linux-headers-5.6.10-050610-generic_5.6.10-050610.202005052301_amd64.deb 
-wget --no-check-certificate -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.6.10/linux-image-unsigned-5.6.10-050610-generic_5.6.10-050610.202005052301_amd64.deb
-wget --no-check-certificate -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.6.10/linux-modules-5.6.10-050610-generic_5.6.10-050610.202005052301_amd64.deb
+wget --no-check-certificate -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8/amd64/linux-headers-5.8.0-050800_5.8.0-050800.202008022230_all.deb
+wget --no-check-certificate -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8/amd64/linux-headers-5.8.0-050800-generic_5.8.0-050800.202008022230_amd64.deb 
+wget --no-check-certificate -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8/amd64/linux-image-unsigned-5.8.0-050800-generic_5.8.0-050800.202008022230_amd64.deb
+wget --no-check-certificate -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8/amd64/linux-modules-5.8.0-050800-generic_5.8.0-050800.202008022230_amd64.deb
 sudo dpkg -i *.deb
 reboot
 }
