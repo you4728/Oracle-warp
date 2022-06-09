@@ -128,7 +128,7 @@ echo -e nameserver 2a00:1098:2c::1 > /etc/resolv.conf && bash <(curl -sSL https:
 - **脚本一：支持X86/ARM架构的纯IPV4 VPS与IPV4+IPV6双栈VPS**
 
 ```
-wget -N --no-check-certificate https://raw.githubusercontent.com/YG-tsj/Pro-warp/main/multi.sh && chmod +x multi.sh && ./multi.sh
+wget -N --no-check-certificate https://raw.githubusercontent.com/you4728/Oracle-warp/main/multi.sh && chmod +x multi.sh && ./multi.sh
 ```
 
 进入脚本快捷方式 ```bash ~/multi.sh```
